@@ -6,15 +6,14 @@ class SendEmail {
     const STS_SENT = "SENT";
     const STS_ERROR = "ERROR";
 
-    public static function insert($type, $entity, $entity_id, $data, $emailRes, $DB = null) {
+    public static function insert($key_id, $type, $data, $emailRes, $DB = null) {
         if ($DB == null) {
             include_once './DB.php';
             $DB = new DB();
         }
 
         $toDB = array(
-            "entity" => $entity,
-            "entity_id" => $entity_id,
+            "key_id" => $key_id,
             "type" => $type,
             "data" => $data
         );
@@ -28,6 +27,28 @@ class SendEmail {
         }
 
         $DB->query_insert(SendEmail::TABLE, $toDB);
+    }
+
+    public static function update($ID, $key_id, $data, $emailRes, $DB = null) {
+        if ($DB == null) {
+            include_once './DB.php';
+            $DB = new DB();
+        }
+
+        $toDB = array(
+            "key_id" => $key_id,
+            "data" => $data
+        );
+
+        if ($emailRes === true) {
+            $toDB["status"] = self::STS_SENT;
+        }
+        // has error
+        else {
+            $toDB["status"] = self::STS_ERROR;
+        }
+
+        $DB->query_update(SendEmail::TABLE, "where ID = $ID ", $toDB);
     }
 
     public static function getTimeByTimezone($unix, $timezone) {
