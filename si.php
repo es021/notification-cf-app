@@ -44,12 +44,15 @@ function createSIEmail($d) {
     ob_start();
     ?>
     <span>
-        <i>Dear <?= $name ?>,</i><br>
+        <i>Dear <?= $name ?>,</i>
+        <br>
         <h3>Congratulations!</h3>
         You have a scheduled interview with <b><?= $d["company"] ?></b> on <u><?= $dateEst ?></u>
-        <br><br>For further details visit <b><a href="<?= APP_URL ?>"><?= APP_NAME ?></a></b>
         <br><br>
-        <i>Regards</i><br>
+        For further details visit <b><a href="<?= APP_URL ?>"><?= APP_NAME ?></a></b>
+        <br><br>
+        <i>Regards,</i>
+        <br>
         Innovaseeds Solutions
     </span>
 
