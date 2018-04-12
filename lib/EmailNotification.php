@@ -11,8 +11,8 @@
 // require '../vendor/autoload.php';
 include_once 'private.php';
 
-function sendMail($TITLE, $BODY, $TO_EMAIL, $TO_NAME) {
-    include_once './PHPMailer.php';
+function sendMail($TITLE, $BODY, $TO_EMAIL, $TO_NAME, $isHTML = false) {
+    include_once 'PHPMailer.php';
 
     //Create a new PHPMailer instance
     $mail = new PHPMailer();
@@ -25,7 +25,7 @@ function sendMail($TITLE, $BODY, $TO_EMAIL, $TO_NAME) {
     // 1 = client messages
     // 2 = client and server messages
     $mail->SMTPDebug = 0;
-
+    //$mail->SMTPDebug = 4;
     //Set the hostname of the mail server
     $mail->Host = 'smtp.gmail.com';
     // use
@@ -55,6 +55,10 @@ function sendMail($TITLE, $BODY, $TO_EMAIL, $TO_NAME) {
     //Set the subject line
     $mail->Subject = $TITLE;
     $mail->Body = $BODY;
+
+    if ($isHTML) {
+        $mail->isHTML();
+    }
 
     //Read an HTML message body from an external file, convert referenced images to embedded,
     //convert HTML into a basic plain-text alternative body

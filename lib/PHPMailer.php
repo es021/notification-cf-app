@@ -19,7 +19,7 @@
  */
 
 //namespace PHPMailer\PHPMailer;
-include_once './SMTP.php';
+include_once 'SMTP.php';
 
 /**
  * PHPMailer - PHP email creation and transport class.
