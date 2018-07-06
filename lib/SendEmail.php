@@ -54,6 +54,7 @@ class SendEmail {
     public static function getTimeByTimezone($unix, $timezone) {
         $TZ = array(
             "EST" => 'America/New_York',
+            "NZT" => 'Pacific/Auckland',
             "MYT" => 'Asia/Kuala_Lumpur'
         );
 

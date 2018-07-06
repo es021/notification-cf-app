@@ -34,13 +34,15 @@ foreach ($data as $d) {
     $name = $d["first_name"] . " " . $d["last_name"];
 
     if (!$isUpdate) {
-        $title = "Scheduled Session with {$d["company"]}";
+        $title = "Scheduled Call with {$d["company"]}";
     } else {
-        $title = "[Time Updated] Scheduled Session with {$d["company"]}";
+        $title = "[Time Updated] Scheduled Call with {$d["company"]}";
     }
 
     // debug
     $to = "zulsarhan.shaari@gmail.com";
+
+
     $res = sendMail($title, $body, $to, $name, true);
 
     $keyId = createKeyId($d["ID"], $d["appointment_time"]);
@@ -62,19 +64,22 @@ function createKeyId($id, $appmnt_time, $in_query = false) {
 
 function createSIEmail($d, $isUpdate) {
     $name = $d["first_name"] . " " . $d["last_name"];
-    $dateEst = SendEmail::getTimeByTimezone($d["appointment_time"], 'EST');
+    $timezone = "NZT";
+    $dateLocal = SendEmail::getTimeByTimezone($d["appointment_time"], 'NZT');
     ob_clean();
     ob_start();
 
     if (!$isUpdate) {
         ?>
         <span>
-            <i>Dear <?= $name ?>,</i>
+            <i>Hi <?= $name ?>,</i>
             <br>
-            <h3>Congratulations!</h3>
-            You have a scheduled session with <b><?= $d["company"] ?></b> on <u><?= $dateEst ?></u>
-            <br>
-            For further details, visit <b><a href="<?= APP_URL ?>"><?= APP_NAME ?></a></b>
+            Recruiter from <b><?= $d["company"] ?></b> has scheduled a call
+            <br>with you on <u><?= $dateLocal ?> (<?= $timezone ?>)</u>.
+            <br><br>
+            Please reply to this email if this time doesn't work or you would like to cancel this call
+            <br><br>
+            Access call by logging in at <b><a href="<?= APP_URL ?>"><?= APP_NAME ?></a></b>. Good luck!
             <br><br>
             <i>Regards,</i>
             <br>
@@ -83,12 +88,15 @@ function createSIEmail($d, $isUpdate) {
         <?php
     } else {
         ?>
-        <span>
-            <i>Dear <?= $name ?>,</i>
-            <br><br>
-            Your scheduled session time with <b><?= $d["company"] ?></b> has been rescheduled to <u><?= $dateEst ?></u>
+       <span>
+            <i>Hi <?= $name ?>,</i>
             <br>
-            For further details, visit <b><a href="<?= APP_URL ?>"><?= APP_NAME ?></a></b>
+            Recruiter from <b><?= $d["company"] ?></b> has rescheduled a call
+            <br>with you on <u><?= $dateLocal ?> (<?= $timezone ?>)</u>.
+            <br><br>
+            Please reply to this email if this time doesn't work or you would like to cancel this call
+            <br><br>
+            Access call by logging in at <b><a href="<?= APP_URL ?>"><?= APP_NAME ?></a></b>. Good luck!
             <br><br>
             <i>Regards,</i>
             <br>
