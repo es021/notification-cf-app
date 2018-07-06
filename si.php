@@ -73,9 +73,9 @@ function createSIEmail($d, $isUpdate) {
         ?>
         <span>
             <i>Hi <?= $name ?>,</i>
-            <br>
+            <br><br>
             Recruiter from <b><?= $d["company"] ?></b> has scheduled a call
-            <br>with you on <u><?= $dateLocal ?> (<?= $timezone ?>)</u>.
+            <br>with you on <u><?= $dateLocal ?></u>.
             <br><br>
             Please reply to this email if this time doesn't work or you would like to cancel this call
             <br><br>
@@ -92,7 +92,7 @@ function createSIEmail($d, $isUpdate) {
             <i>Hi <?= $name ?>,</i>
             <br>
             Recruiter from <b><?= $d["company"] ?></b> has rescheduled a call
-            <br>with you on <u><?= $dateLocal ?> (<?= $timezone ?>)</u>.
+            <br>with you on <u><?= $dateLocal ?></u>.
             <br><br>
             Please reply to this email if this time doesn't work or you would like to cancel this call
             <br><br>

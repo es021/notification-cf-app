@@ -69,8 +69,12 @@ function sendMail($TITLE, $BODY, $TO_EMAIL, $TO_NAME, $isHTML = false) {
     //$mail->addAttachment('images/phpmailer_mini.png');
     //send the message, check for errors
     if (!$mail->send()) {
+        echo "Error sent email to ".$TO_EMAIL;
+        echo $mail->ErrorInfo;
+        
         return $mail->ErrorInfo;
     } else {
+        echo "Successfully sent email to ".$TO_EMAIL;
         return true;
         //Section 2: IMAP
         //Uncomment these to save your message in the 'Sent Mail' folder.
