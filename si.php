@@ -40,7 +40,7 @@ foreach ($data as $d) {
     }
 
     // debug
-    $to = "zulsarhan.shaari@gmail.com";
+    //$to = "zulsarhan.shaari@gmail.com";
 
 
     $res = sendMail($title, $body, $to, $name, true);
