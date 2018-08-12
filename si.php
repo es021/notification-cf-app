@@ -90,7 +90,6 @@ function createSIEmail($d, $isUpdate) {
             Innovaseeds Solutions
         </span>
     <?php
-    }
     $output_string = ob_get_contents();
     ob_end_clean();
     return $output_string;
