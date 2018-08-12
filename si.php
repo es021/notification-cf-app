@@ -64,18 +64,22 @@ function createKeyId($id, $appmnt_time, $in_query = false) {
 
 function createSIEmail($d, $isUpdate) {
     $name = $d["first_name"] . " " . $d["last_name"];
-    $timezone = "NZT";
-    $dateLocal = SendEmail::getTimeByTimezone($d["appointment_time"], 'NZT');
+    //$timezone = "NZT";
+    $timezone = "MYT";
+    $dateStr = SendEmail::getTimeByTimezone($d["appointment_time"], $timezone);
+
+    $urlConvert = "http://www.convert-unix-time.com/?t=".$d["appointment_time"];
+
     ob_clean();
     ob_start();
 
-    if (!$isUpdate) {
-        ?>
+    ?>
         <span>
             <i>Hi <?= $name ?>,</i>
             <br><br>
-            Recruiter from <b><?= $d["company"] ?></b> has scheduled a call
-            <br>with you on <u><?= $dateLocal ?></u>.
+            Recruiter from <b><?= $d["company"] ?></b> has <?= (!$isUpdate) ? "scheduled" : "rescheduled" ?> a call
+            <br>with you on <u><?= $dateStr ?></u>.
+            <br><a href="<?= $urlConvert ?>" target="_blank">Convert to your local time</a>
             <br><br>
             Please reply to this email if this time doesn't work or you would like to cancel this call
             <br><br>
@@ -85,24 +89,7 @@ function createSIEmail($d, $isUpdate) {
             <br>
             Innovaseeds Solutions
         </span>
-        <?php
-    } else {
-        ?>
-       <span>
-            <i>Hi <?= $name ?>,</i>
-            <br>
-            Recruiter from <b><?= $d["company"] ?></b> has rescheduled a call
-            <br>with you on <u><?= $dateLocal ?></u>.
-            <br><br>
-            Please reply to this email if this time doesn't work or you would like to cancel this call
-            <br><br>
-            Access call by logging in at <b><a href="<?= APP_URL ?>"><?= APP_NAME ?></a></b>. Good luck!
-            <br><br>
-            <i>Regards,</i>
-            <br>
-            Innovaseeds Solutions
-        </span>
-        <?php
+    <?php
     }
     $output_string = ob_get_contents();
     ob_end_clean();
