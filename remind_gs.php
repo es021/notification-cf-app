@@ -9,9 +9,9 @@ define("APP_NAME", "SeedsJobFair.com");
 define("REMIND_HOUR", 1);
 
 $now = time();
-$offsetUnix = 10 * 60;
+$offsetUnix = 15 * 60;
 $hourStart = $now + (REMIND_HOUR * 60 * 60) - $offsetUnix;
-$hourEnd =  $now + ((REMIND_HOUR + 1) * 30 * 60) + $offsetUnix;
+$hourEnd =  $now + ((REMIND_HOUR + 1) * 60 * 60) + $offsetUnix;
 
 // get all group_session join that are not in email sent yet
 $DB = new DB();
@@ -34,6 +34,7 @@ $q = "select  p.ID
     and gs.ID = p.group_session_id
     and gs.start_time >= $hourStart and gs.start_time <= $hourEnd
     and e.status IS NULL ";
+
 
 $data = $DB->query_array($q);
 
