@@ -35,6 +35,7 @@ $q = "select  p.ID
     and gs.start_time >= $hourStart and gs.start_time <= $hourEnd
     and e.status IS NULL ";
 
+    X($q);
 
 $data = $DB->query_array($q);
 
