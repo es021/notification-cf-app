@@ -31,7 +31,7 @@ $q = "select  p.ID
     from pre_screens p
     left outer join send_emails e on e.key_id = $queryKeyId
 
-    where p.status in ('Approved','1_Waiting')
+    where p.status in ('2_Approved','1_Waiting')
     and e.status IS NULL ";
 
 $data = $DB->query_array($q);
