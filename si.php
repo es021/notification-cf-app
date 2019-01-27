@@ -72,8 +72,8 @@ foreach ($data as $d) {
 function createActionLink($action, $studentId, $interviewId, $companyName, $studentName)
 {
     $param = array(
-        "studentId" => $studentId,
-        "interviewId" => $interviewId,
+        "studentId" => (int) $studentId,
+        "interviewId" => (int) $interviewId,
         "companyName" => $companyName,
         "studentName" => $studentName,
     );
