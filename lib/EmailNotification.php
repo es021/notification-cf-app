@@ -11,7 +11,7 @@
 // require '../vendor/autoload.php';
 include_once 'private.php';
 
-function sendMail($TITLE, $BODY, $TO_EMAIL, $TO_NAME, $isHTML = false) {
+function sendMail($TITLE, $BODY, $TO_EMAIL, $TO_NAME, $isHTML = false, $isTestSender = false) {
     include_once 'PHPMailer.php';
 
     //Create a new PHPMailer instance
@@ -40,15 +40,16 @@ function sendMail($TITLE, $BODY, $TO_EMAIL, $TO_NAME, $isHTML = false) {
     //Whether to use SMTP authentication
     $mail->SMTPAuth = true;
 
-    //Username to use for SMTP authentication - use full email address for gmail
-    $mail->Username = EMAIL_FROM;
-
-    //Password to use for SMTP authentication
-    $mail->Password = EMAIL_PASSWORD;
-
-    //Set who the message is to be sent from
-    $mail->setFrom(EMAIL_FROM, EMAIL_NAME);
-
+    if($isTestSender){
+        $mail->Username = EMAIL_FROM_TEST;
+        $mail->Password = EMAIL_PASSWORD_TEST;
+        $mail->setFrom(EMAIL_FROM_TEST, EMAIL_NAME_TEST);
+    }else{
+        $mail->Username = EMAIL_FROM;
+        $mail->Password = EMAIL_PASSWORD;
+        $mail->setFrom(EMAIL_FROM, EMAIL_NAME);
+    }
+   
     //Set who the message is to be sent to
     $mail->addAddress($TO_EMAIL, $TO_NAME);
 
