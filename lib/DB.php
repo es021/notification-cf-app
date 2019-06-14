@@ -32,12 +32,26 @@ class DB {
         }
     }
 
+    public function close(){
+        mysqli_close($this->conn);
+    }
+
     public function query($q) {
         $this->init();
         $this->db_sql = $q;
         $result = mysqli_query($this->conn, $q);
         if (!$result) {
             die("Invalid query -- $q -- " . mysqli_error($this->conn));
+        }
+        return $result;
+    }
+
+    public function multi_query($q) {
+        $this->init();
+        $this->db_sql = $q;
+        $result = mysqli_multi_query($this->conn, $q);
+        if (!$result) {
+            die("Invalid multi query -- $q -- " . mysqli_error($this->conn));
         }
         return $result;
     }
