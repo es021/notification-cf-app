@@ -2,9 +2,11 @@
 include_once 'lib/DB.php';
 include_once 'lib/EmailNotification.php';
 include_once 'lib/SendEmail.php';
+include_once 'lib/config.php';
 
-define("APP_URL", "http://seedsjobfair.com/cf/app");
-define("APP_NAME", "SeedsJobFair.com");
+//define("APP_URL", "http://seedsjobfair.com/cf/app");
+//define("APP_URL", "http://seedsjobfairapp.com/cf/app");
+// define("APP_NAME", "SeedsJobFair.com");
 
 define("REMIND_HOUR", 1);
 
@@ -68,7 +70,8 @@ function createSIEmail($d, $isUpdate) {
     $timezone = "MYT";
     $dateStr = SendEmail::getTimeByTimezone($d["start_time"], $timezone);
 
-    $urlConvert = "http://www.convert-unix-time.com/?t=".$d["start_time"];
+    //$urlConvert = "http://www.convert-unix-time.com/?t=".$d["start_time"];
+    $urlConvert = CONVERT_UNIX_URL.$d["start_time"];
 
     ob_clean();
     ob_start();

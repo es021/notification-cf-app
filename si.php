@@ -2,12 +2,14 @@
 include_once 'lib/DB.php';
 include_once 'lib/EmailNotification.php';
 include_once 'lib/SendEmail.php';
+include_once 'lib/config.php';
 
 //define("APP_URL", "http://seedsjobfair.com/cf/app");
-define("APP_URL", "http://seedsjobfairapp.com/cf/app");
+// define("APP_URL", "http://seedsjobfairapp.com/cf/app");
 //define("APP_AUTH_URL", "http://localhost:8080/auth");
-define("APP_AUTH_URL", "http://seedsjobfairapp.com/cf/auth");
-define("APP_NAME", "SeedsJobFair.com");
+// define("APP_AUTH_URL", "http://seedsjobfairapp.com/cf/auth");
+// define("APP_NAME", "SeedsJobFair.com");
+
 
 // action email
 define("ACCEPT_INTERVIEW", "acceptInterview");
@@ -124,7 +126,8 @@ function createSIEmail($d, $isUpdate)
     $timezone = "MYT";
     $dateStr = SendEmail::getTimeByTimezone($d["appointment_time"], $timezone);
 
-    $urlConvert = "http://www.convert-unix-time.com/?t=" . $d["appointment_time"];
+    //$urlConvert = "http://www.convert-unix-time.com/?t=" . $d["appointment_time"];
+    $urlConvert = CONVERT_UNIX_URL . $d["appointment_time"];
 
     ob_clean();
     ob_start();
