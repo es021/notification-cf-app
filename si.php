@@ -1,5 +1,6 @@
 <?php
 include_once 'lib/DB.php';
+include_once 'lib/helper.php';
 include_once 'lib/EmailNotification.php';
 include_once 'lib/SendEmail.php';
 include_once 'lib/config.php';
@@ -18,13 +19,18 @@ define("REJECT_INTERVIEW", "rejectInterview");
 // get all Approved prescreens that are not in email sent yet
 // at the same time check is_update whether the same entity has been sent before
 
+
+//, (select m.meta_value from wp_cf_usermeta m where m.user_id = p.student_id and m.meta_key = 'first_name' ) as first_name
+//, (select m.meta_value from wp_cf_usermeta m where m.user_id = p.student_id and m.meta_key = 'last_name' ) as last_name
+$fname = getUserMetaQuery("p.student_id","first_name");
+$lname = getUserMetaQuery("p.student_id","last_name");
 $DB = new DB();
 $queryKeyId = createKeyId("p.ID", "p.appointment_time", true);
 $q = "select  p.ID
     , (select e.ID from send_emails e where e.key_id like CONCAT('prescreens_' , p.ID , '_%')) as is_update
     , (select u.user_email from wp_cf_users u where u.ID = p.student_id) as email
-    , (select m.meta_value from wp_cf_usermeta m where m.user_id = p.student_id and m.meta_key = 'first_name' ) as first_name
-    , (select m.meta_value from wp_cf_usermeta m where m.user_id = p.student_id and m.meta_key = 'last_name' ) as last_name
+    , $fname
+    , $lname
     , (select c.name from companies c where c.ID = p.company_id) as company
     , p.company_id
     , p.student_id
@@ -51,7 +57,7 @@ foreach ($data as $d) {
     }
 
     // debug
-    //$to = "zulsarhan.shaari@gmail.com";
+    // $to = "zulsarhan.shaari@gmail.com";
 
     $res = sendMail($title, $body, $to, $name, true);
 

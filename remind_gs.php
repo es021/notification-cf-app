@@ -1,5 +1,6 @@
 <?php
 include_once 'lib/DB.php';
+include_once 'lib/helper.php';
 include_once 'lib/EmailNotification.php';
 include_once 'lib/SendEmail.php';
 include_once 'lib/config.php';
@@ -15,14 +16,22 @@ $offsetUnix = 15 * 60;
 $hourStart = $now + (REMIND_HOUR * 60 * 60) - $offsetUnix;
 $hourEnd =  $now + ((REMIND_HOUR + 1) * 60 * 60) + $offsetUnix;
 
+
 // get all group_session join that are not in email sent yet
 $DB = new DB();
 $queryKeyId = createKeyId("p.ID", "p.group_session_id", true);
+
+// , (select m.meta_value from wp_cf_usermeta m where m.user_id = p.user_id and m.meta_key = 'first_name' ) as first_name
+// , (select m.meta_value from wp_cf_usermeta m where m.user_id = p.user_id and m.meta_key = 'last_name' ) as last_name
+
+$fname = getUserMetaQuery("p.user_id","first_name");
+$lname = getUserMetaQuery("p.user_id","last_name");
+
 $q = "select  p.ID
     , p.group_session_id
     , (select u.user_email from wp_cf_users u where u.ID = p.user_id) as email
-    , (select m.meta_value from wp_cf_usermeta m where m.user_id = p.user_id and m.meta_key = 'first_name' ) as first_name
-    , (select m.meta_value from wp_cf_usermeta m where m.user_id = p.user_id and m.meta_key = 'last_name' ) as last_name
+    , $fname
+    , $lname
     , (select c.name from companies c where c.ID = gs.company_id) as company
     , gs.start_time 
    
