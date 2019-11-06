@@ -11,7 +11,7 @@
 // require '../vendor/autoload.php';
 include_once 'private.php';
 
-function sendMail($TITLE, $BODY, $TO_EMAIL, $TO_NAME, $isHTML = false, $isTestSender = false) {
+function sendMail($TITLE, $BODY, $TO_EMAIL, $TO_NAME, $isHTML = false, $isTestSender = false, $from_name = null) {
     include_once 'PHPMailer.php';
 
     //Create a new PHPMailer instance
@@ -43,11 +43,13 @@ function sendMail($TITLE, $BODY, $TO_EMAIL, $TO_NAME, $isHTML = false, $isTestSe
     if($isTestSender){
         $mail->Username = EMAIL_FROM_TEST;
         $mail->Password = EMAIL_PASSWORD_TEST;
-        $mail->setFrom(EMAIL_FROM_TEST, EMAIL_NAME_TEST);
+        $from_name = $from_name == null ? EMAIL_NAME_TEST : $from_name;
+        $mail->setFrom(EMAIL_FROM_TEST, $from_name);
     }else{
         $mail->Username = EMAIL_FROM;
         $mail->Password = EMAIL_PASSWORD;
-        $mail->setFrom(EMAIL_FROM, EMAIL_NAME);
+        $from_name = $from_name == null ? EMAIL_NAME : $from_name;
+        $mail->setFrom(EMAIL_FROM, $from_name);
     }
    
     //Set who the message is to be sent to

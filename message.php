@@ -6,6 +6,8 @@ include_once 'lib/SendEmail.php';
 include_once 'lib/config.php';
 
 // send email notification to STUDENT only
+define("APP_URL", "http://seedsjobfairapp.com/cf/app");
+define("ASSET_URL", "https://seedsjobfairapp.com/public/asset");
 
 function createKeyId($id, $in_query = false)
 {
@@ -81,13 +83,23 @@ foreach ($data as $d) {
     $to = $toData["email"];
     $name = $toData["name"];
 
-    $title = "You've got new message from {$fromData["name"]}";
+    $title = "{$fromData["name"]} sent you a new message";
    
     // debug
-    $to = "zulsarhan.shaari@gmail.com";
+    // $to = "zulsarhan.shaari@gmail.com";
 
     $body = createMessageNotificationEmail($fromData, $toData, $message);
-    $res = sendMail($title, $body, $to, $name, true);
+    $isHTML = true;
+    $isTestSender = false;
+    $from_name = "{$fromData["name"]} via SeedsJobFair";
+
+    // echo $from_name;
+    // echo "<hr>";
+    // echo $title;
+    // echo "<hr>";
+    // echo $body;
+    
+    $res = sendMail($title, $body, $to, $name, $isHTML, $isTestSender, $from_name);
     SendEmail::insert($keyId, "new_message", json_encode($d), $res, $DB);
 }
 
@@ -123,22 +135,88 @@ function getQueryEntity($entity, $entity_id, $type){
     }
 }
 
-function createMessageNotificationEmail($fromData, $toData, $message)
+function createViewMessageBtn()
 {
+    $url = APP_URL . "/my-inbox";
+    return createBtnHtml("View Message", $url, "#20ae29");
+}
+
+function createAvatarHtml($img_url, $img_pos, $img_size, $entity){
+    if($img_url == ""){
+        if($entity == "company"){
+            $img_url = ASSET_URL . "/image/default-company.jpg";
+        } else if($entity == "user"){
+            $img_url = ASSET_URL . "/image/default-user.png";
+        }
+    }
+    $img_pos = $img_pos == "" ? "0px 0px" : $img_pos;
+    $img_size = $img_size == "" ? "cover" : $img_size;
+
     ob_clean();
     ob_start();
+    ?>
+    <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center" style="border-radius: 100%; height:100px; width:100px; background-image: url('<?= $img_url ?>'); background-position: <?= $img_pos ?>; background-size: <?= $img_size ?>; background-repeat: no-repeat; "></td>
+        </tr>
+    </table>
+    <?php
+    $output_string = ob_get_contents();
+    ob_end_clean();
+    return $output_string;
+}
+
+function createBtnHtml($text, $url, $color){
+    ob_clean();
+    ob_start();
+    ?>
+    
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                <td bgcolor="<?= $color ?>" style="padding: 12px 18px 12px 18px; border-radius:3px" align="center">
+                    <a href="<?= $url ?>" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; display: inline-block;">
+                        <?= $text ?> &rarr;
+                    </a></td>
+                </tr>
+            </table>
+            </td>
+        </tr>
+    </table>
+
+    <?php
+    $output_string = ob_get_contents();
+    ob_end_clean();
+    return $output_string;
+}
+
+
+function createMessageNotificationEmail($fromData, $toData, $message)
+{
+    $btnAction = createViewMessageBtn();
+    $fromAvatar = createAvatarHtml($fromData["img_url"], $fromData["img_pos"], $fromData["img_size"], $fromData["entity"]);
+    //$toAvatar = createAvatarHtml($toData["img_url"], $toData["img_pos"], $toData["img_size"]);
+
+    ob_clean();
+    ob_start();
+    
+    //  <b style="font-size:20px;">"<?= $message </b>
 
     ?>
         <span>
             <i>Hi <?= $toData["name"] ?>,</i>
             <br><br>
-            You've got new message from <?= $fromData["name"] ?>
+            <span style="font-size:15px;">
+            You've got new message from <b><?= $fromData["name"] ?></b>
             <br>
-            <b style="font-size:20px;">"<?= $message ?>"</b>
-            <br><br>
-            <i>Regards,</i>
             <br>
-            Innovaseeds Solutions
+            <?= $fromAvatar ?>
+            <br>
+            <?= $btnAction ?>
+            <br>    
+            </span>            
         </span>
     <?php
 
