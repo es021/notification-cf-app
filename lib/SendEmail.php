@@ -3,6 +3,7 @@
 class SendEmail {
 
     const TABLE = "send_emails";
+    const STS_SKIP = "SKIP";
     const STS_SENT = "SENT";
     const STS_ERROR = "ERROR";
 
@@ -18,7 +19,9 @@ class SendEmail {
             "data" => $data
         );
 
-        if ($emailRes === true) {
+        if($emailRes === "SKIP"){
+            $toDB["status"] = self::STS_SKIP;
+        }else if ($emailRes === true) {
             $toDB["status"] = self::STS_SENT;
         }
         // has error

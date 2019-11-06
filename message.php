@@ -37,8 +37,7 @@ $q = "
         and e.status IS NULL
 ";
 $data = $DB->query_array($q);
-
-
+//X($data);
 
 foreach ($data as $d) {
     $isSenderSupportOrCompany = $d["support_id"] == $d["from_user_id"];
@@ -52,6 +51,7 @@ foreach ($data as $d) {
     $fromQuery = getQueryEntity($fromEntity, $fromId, "from");
 
     $id = $d["id"];
+    $keyId = createKeyId($id);
     $arrId = explode(":", $id);
     $toIndex = $fromKey == $arrId[0] ? 1 : 0;
     
@@ -63,6 +63,7 @@ foreach ($data as $d) {
 
     // akan skip sume message yang dihantar ke company or support
     if($support_id == $toId){
+        SendEmail::insert($keyId, "new_message", json_encode($d), "SKIP", $DB);
         continue;
     }
 
@@ -78,7 +79,6 @@ foreach ($data as $d) {
     // X("fromKey ".$fromKey." | "."fromEntity ".$fromEntity." | "."fromId ".$fromId);
     // X("toKey ".$toKey." | "."toEntity ".$toEntity." | "."toId ".$toId);
     X("--------------------------------------------------------------");
-    $keyId = createKeyId($id);
 
     $to = $toData["email"];
     $name = $toData["name"];
@@ -86,7 +86,7 @@ foreach ($data as $d) {
     $title = "{$fromData["name"]} sent you a new message";
    
     // debug
-    // $to = "zulsarhan.shaari@gmail.com";
+    //$to = "zulsarhan.shaari@gmail.com";
 
     $body = createMessageNotificationEmail($fromData, $toData, $message);
     $isHTML = true;
