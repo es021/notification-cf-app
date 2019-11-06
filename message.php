@@ -33,7 +33,7 @@ $q = "
         left outer join support_sessions ss  on ss.message_count_id = mc.id
 
     WHERE 1=1 
-        and mc.created_at >= '2018-11-01 00:00:00'
+        and mc.created_at >= '2019-11-01 00:00:00'
         and e.status IS NULL
 ";
 $data = $DB->query_array($q);
