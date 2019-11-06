@@ -9,8 +9,8 @@ include_once 'lib/config.php';
 // masa query dia akan amik yang first message je
 // so dia notify the starter of the message je
 
-define("APP_URL", "https://seedsjobfairapp.com/cf/app");
-define("ASSET_URL", "https://seedsjobfairapp.com/public/asset");
+// define("APP_URL", "https://seedsjobfairapp.com/cf/app");
+// define("ASSET_URL", "https://seedsjobfairapp.com/public/asset");
 
 function createKeyId($id, $in_query = false)
 {
