@@ -1,6 +1,6 @@
 <?php
-// define("ROOT_URL",  "https://seedsjobfairapp.com/cf");
-define("ROOT_URL", "http://localhost:4000");
+define("ROOT_URL",  "https://seedsjobfairapp.com/cf");
+// define("ROOT_URL", "http://localhost:4000");
 
 //  define("IS_PROD", false);
 // if(!IS_PROD){
