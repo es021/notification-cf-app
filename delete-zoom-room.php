@@ -21,7 +21,6 @@ define("ROOT_URL",  "https://seedsjobfairapp.com/cf");
 include_once './lib/DB.php';
 $ENDED_STATUS = "4_Ended";
 $STARTED_STATUS = "0_Started";
-$OFFSET_HOUR = 1;
 $DB = new DB();
 
 // ##################################
@@ -64,17 +63,21 @@ function isZoomExpired($data){
 
 
 // ##################################
-// 1. get data pre screens yang appoiment time dia 
-// kurang daripada <OFFSET_HOUR> jam lepas
-$currentUnix = time() ;
-$currentUnix -= $OFFSET_HOUR * 60 * 60;
-$_where = isset($_POST["ID"]) 
-    ? "p.ID = $_POST[ID]" 
-    : " p.appointment_time <= $currentUnix AND p.join_url LIKE '%zoom.us%' ";
-
-$q = "SELECT p.* FROM pre_screens p WHERE 1=1
+// 1. get data pre screens yang appoiment time dia [$OFFSET_MIN] minit lepas
+//      - zoom_created_24_hours_ago indicator zoom meeting was created passed 24 hours or not
+$OFFSET_MIN = 30;
+$offsetAgoUnix = time() - ($OFFSET_MIN * 60);
+// SELECT * FROM table WHERE DATE(created_at) = DATE(NOW() - INTERVAL 1 DAY);
+$q = "SELECT 
+    (CASE WHEN zm.created_at < (NOW() - INTERVAL 24 HOUR) THEN '1' ELSE '0' END) as zoom_created_24_hours_ago,
+    p.* 
+    FROM pre_screens p, zoom_meetings zm 
+    WHERE 1=1
+    AND zm.pre_screen_id = p.ID
+    AND zm.join_url = p.join_url
     AND p.status = '$STARTED_STATUS' 
-    AND $_where";
+    AND p.appointment_time <= $offsetAgoUnix 
+    AND p.join_url LIKE '%zoom.us% ";
 
 $data = $DB->query_array($q);
 
@@ -88,16 +91,15 @@ foreach ($data as $d) {
     $join_url = $d["join_url"];
     $pre_screen_id = $d["ID"];
     $appointment_time = $d["appointment_time"];
+    $zoom_created_24_hours_ago = $d["zoom_created_24_hours_ago"];
     $unixNow = time();
-    // $arr = explode("daily.co/",$url);
-    // $room_name = $arr[1];
     
-    if(isZoomExpired($d)){
+    if($zoom_created_24_hours_ago == "1" || isZoomExpired($d)){
         $countExpired ++;
         // X("expired suda");    
          $sqlUpdate .= " UPDATE zoom_meetings SET auto_expired_at = $unixNow, is_expired = '1' WHERE pre_screen_id = $pre_screen_id AND join_url = '$join_url'; ";
          $sqlUpdate .= " UPDATE pre_screens SET status = '$ENDED_STATUS', is_expired = '1' WHERE ID = $pre_screen_id; ";
-    }else{
+    } else{
         // X("dok expired lagi");
     }
 
