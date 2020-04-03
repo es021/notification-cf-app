@@ -80,6 +80,7 @@ $q = "SELECT
     AND p.join_url LIKE '%zoom.us%' ";
 
 $data = $DB->query_array($q);
+$total = count($data);
 
 // X($q);
 // X($data);
@@ -113,11 +114,12 @@ $result = "";
 if($countExpired > 0){
     $DB->multi_query($sqlUpdate);
     $DB->close();
-    $result = "successfully auto expired $countExpired interview(s)";
+    $result = "Successfully auto expired $countExpired interview(s)";
 }else{
-    $result = "no expired interview found";
+    $result = "No expired interview found";
 }
 
-echo $result;
+echo "Total of ". $total ." interview(s) fetched.\n";
+echo $result."\n";
 
 ?>
