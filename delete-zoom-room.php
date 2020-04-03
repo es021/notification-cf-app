@@ -18,7 +18,7 @@ define("ROOT_URL",  "https://seedsjobfairapp.com/cf");
 //             is_expired = "1"
 //     ps_daily_co_deleted {ID, pre_screens_id, room_name, created_at}
 // update prescreen status kepada 4_Ended
-include_once './lib/DB.php';
+include_once 'lib/DB.php';
 $ENDED_STATUS = "4_Ended";
 $STARTED_STATUS = "0_Started";
 $DB = new DB();
