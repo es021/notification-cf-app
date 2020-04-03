@@ -82,7 +82,7 @@ $q = "SELECT
 $data = $DB->query_array($q);
 $total = count($data);
 
-// X($q);
+X($q);
 // X($data);
 
 $sqlUpdate = "";
