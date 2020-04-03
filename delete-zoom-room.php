@@ -78,8 +78,8 @@ $q = "SELECT p.* FROM pre_screens p WHERE 1=1
 
 $data = $DB->query_array($q);
 
-X($q);
-X($data);
+// X($q);
+// X($data);
 
 $sqlUpdate = "";
 $countExpired = 0;
