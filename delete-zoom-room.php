@@ -77,7 +77,7 @@ $q = "SELECT
     AND zm.join_url = p.join_url
     AND p.status = '$STARTED_STATUS' 
     AND p.appointment_time <= $offsetAgoUnix 
-    AND p.join_url LIKE '%zoom.us% ";
+    AND p.join_url LIKE '%zoom.us%' ";
 
 $data = $DB->query_array($q);
 
