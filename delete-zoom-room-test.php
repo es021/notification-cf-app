@@ -113,7 +113,7 @@ foreach ($data as $d) {
 $result = "";
 if($countExpired > 0){
     //$DB->multi_query($sqlUpdate);
-    //$DB->close();
+    //$DB->close(); 
     $result = "Successfully auto expired $countExpired interview(s)";
 }else{
     $result = "No expired interview found";
