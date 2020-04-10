@@ -83,6 +83,8 @@ function deleteRequestToDailyCo($name){
 $sqlInsertToDelete = "INSERT INTO ps_daily_co_deleted (pre_screens_id, room_name) VALUES ";
 $sqlUpdateStatus = "";
 $doExec = false;
+$successCount = 0;
+$failedCount = 0;
 foreach ($data as $d) {
     $doExec = true;
     $url = $d["join_url"];
@@ -96,6 +98,9 @@ foreach ($data as $d) {
     if($isSucess){
         $sqlInsertToDelete .= " ('$pre_screens_id','$room_name'), ";
         $sqlUpdateStatus .= sqlPreScreensUpdateStatus($pre_screens_id);
+        $successCount ++;
+    }else{
+        $failedCount ++;
     }
 }
 
@@ -112,9 +117,9 @@ if($doExec){
     $DB->query($sqlInsertToDelete);
     $DB->multi_query($sqlUpdateStatus);
     $DB->close();
-    $result = "success";
+    $result = "Success Count : $successCount  || Failed Count : $failedCount \n";
 }else{
-    $result = "Session Not Found";
+    $result = "Session Not Found\n";
 }
 
 echo $result;
