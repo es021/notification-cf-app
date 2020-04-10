@@ -12,7 +12,7 @@ if(!IS_PROD){
 // masuk dalam table baru, yang dh deleted 
 //     ps_daily_co_deleted {ID, pre_screens_id, room_name, created_at}
 // update prescreen status kepada 4_Ended
-include_once dirname(__DIR__).'/../lib/DB.php';
+include_once dirname(__DIR__).'/lib/DB.php';
 $ENDED_STATUS = "4_Ended";
 $OFFSET_HOUR = 24;
 $DB = new DB();
