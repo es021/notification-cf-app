@@ -77,13 +77,12 @@ foreach ($data as $d) {
 ////////////////////////////////////////////////////////////////////////////////////////
 // function starts
 
-function createActionLink($action, $studentId, $interviewId, $companyName, $studentName)
+function createActionLink($action, $studentId, $interviewId, $companyId)
 {
     $param = array(
         "studentId" => (int) $studentId,
         "interviewId" => (int) $interviewId,
-        "companyName" => $companyName,
-        "studentName" => $studentName,
+        "companyId" => (int) $companyId
     );
 
     $paramStr = json_encode($param);
@@ -138,10 +137,10 @@ function createSIEmail($d, $isUpdate)
     ob_clean();
     ob_start();
 
-    $acceptLink = createActionLink(ACCEPT_INTERVIEW, $d["student_id"], $d["ID"], $d["company"], $d["first_name"]);
+    $acceptLink = createActionLink(ACCEPT_INTERVIEW, $d["student_id"], $d["ID"], $d["company_id"]);
     $acceptBtn = createBtnHtml($acceptLink, "Accept Call", "#2d8f2d");
 
-    $rejectLink = createActionLink(REJECT_INTERVIEW, $d["student_id"], $d["ID"], $d["company"], $d["first_name"]);
+    $rejectLink = createActionLink(REJECT_INTERVIEW, $d["student_id"], $d["ID"], $d["company_id"]);
     $rejectBtn = createBtnHtml($rejectLink, "Reject Call", "#d72a2a");
 
     //or you would like to cancel this call
