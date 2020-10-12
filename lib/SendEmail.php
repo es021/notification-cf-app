@@ -6,6 +6,7 @@ class SendEmail {
     const STS_SKIP = "SKIP";
     const STS_SENT = "SENT";
     const STS_ERROR = "ERROR";
+    const STS_SMS = "SMS";
 
     public static function insert($key_id, $type, $data, $emailRes, $DB = null) {
         if ($DB == null) {
@@ -23,6 +24,8 @@ class SendEmail {
             $toDB["status"] = self::STS_SKIP;
         }else if ($emailRes === true) {
             $toDB["status"] = self::STS_SENT;
+        }else if($emailRes === "SMS"){
+            $toDB["status"] = self::STS_SMS;
         }
         // has error
         else {
