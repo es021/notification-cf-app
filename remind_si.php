@@ -45,9 +45,8 @@ $q = "select  p.*
 
 $data = $DB->query_array($q);
 
-X($data);
-
-exit();
+// X($data);
+// exit();
 
 foreach ($data as $d) {
     sendSms($d["student_id"], SMS_TYPE, $d);
