@@ -5,7 +5,7 @@ include_once 'lib/EmailNotification.php';
 include_once 'lib/SendEmail.php';
 include_once 'lib/config.php';
 
-define("IS_PROD", false);
+define("IS_PROD", true);
 define("REMIND_MINUTE", 24 * 60);
 define("SMS_TYPE", "INTERVIEW_REMINDER_1DAY");
 
