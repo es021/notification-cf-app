@@ -5,9 +5,9 @@ include_once 'lib/EmailNotification.php';
 include_once 'lib/SendEmail.php';
 include_once 'lib/config.php';
 
-define("IS_PROD", true);
-define("REMIND_MINUTE", 30);
-define("SMS_TYPE", "INTERVIEW_REMINDER");
+define("IS_PROD", false);
+define("REMIND_MINUTE", 24 * 60);
+define("SMS_TYPE", "INTERVIEW_REMINDER_1DAY");
 
 if(!IS_PROD){
     header('Access-Control-Allow-Origin: *');
@@ -41,17 +41,17 @@ $q = "select  p.*,
     and p.status = '$STATUS_APPROVED' 
     and p.appointment_time >= $hourStart and p.appointment_time <= $hourEnd";
 
-//X($q);
+// X($q);
 
-$data = $DB->query_array($q);
+// $data = $DB->query_array($q);
 
 // X($data);
-// exit();
+// // exit();
 
 foreach ($data as $d) {
     sendSms($d["student_id"], SMS_TYPE, $d);
     $keyId = createKeyId($d["ID"], $d["appointment_time"]);
-    SendEmail::insert($keyId, "remind_scheduled_interview", json_encode($d), "SMS", $DB);
+    SendEmail::insert($keyId, "remind_scheduled_interview_1day", json_encode($d), "SMS", $DB);
 }
 
 function sendSms($user_id, $type, $d){
@@ -92,9 +92,9 @@ function sendSms($user_id, $type, $d){
 
 function createKeyId($id, $appointment_time, $in_query = false) {
     if ($in_query) {
-        return "CONCAT('remind_si_' , $id, '_', $appointment_time)";
+        return "CONCAT('remind_si_1day_' , $id, '_', $appointment_time)";
     } else {
-        return "remind_si_{$id}_{$appointment_time}";
+        return "remind_si_1day_{$id}_{$appointment_time}";
     }
 }
 
