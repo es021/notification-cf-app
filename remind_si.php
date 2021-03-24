@@ -41,10 +41,10 @@ $q = "select  p.*,
     and p.status = '$STATUS_APPROVED' 
     and p.appointment_time >= $hourStart and p.appointment_time <= $hourEnd";
 
-//X($q);
-
+    
 $data = $DB->query_array($q);
-
+    
+// X($q);
 // X($data);
 // exit();
 

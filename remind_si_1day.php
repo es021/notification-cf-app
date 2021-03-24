@@ -19,7 +19,9 @@ if(!IS_PROD){
 $now = time();
 $offsetUnix = 15 * 60;
 $hourStart = $now + (REMIND_MINUTE * 60) - $offsetUnix;
-$hourEnd =  $now + ((REMIND_MINUTE * 2) * 60) + $offsetUnix;
+$hourEnd =  $hourStart + (60 * 2 * 60); // 2 hours after
+
+// $hourEnd =  $now + ((REMIND_MINUTE * 2) * 60) + $offsetUnix;
 
 // echo SendEmail::getTimeByTimezone($hourStart, "MYT");
 // echo "<br>";
@@ -41,12 +43,12 @@ $q = "select  p.*,
     and p.status = '$STATUS_APPROVED' 
     and p.appointment_time >= $hourStart and p.appointment_time <= $hourEnd";
 
+    
+$data = $DB->query_array($q);
+    
 // X($q);
-
-// $data = $DB->query_array($q);
-
 // X($data);
-// // exit();
+// exit();
 
 foreach ($data as $d) {
     sendSms($d["student_id"], SMS_TYPE, $d);
