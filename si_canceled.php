@@ -124,7 +124,7 @@ function createSIEmail($d)
             <br><br>
             <i>Regards,</i>
             <br>
-            Innovaseeds Solutions
+            Seeds Job Fair
         </span>
     <?php
 

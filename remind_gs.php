@@ -96,7 +96,7 @@ function createSIEmail($d, $isUpdate) {
             <br><br>
             <i>Regards,</i>
             <br>
-            Innovaseeds Solutions
+            Seeds Job Fair
         </span>
     <?php
     $output_string = ob_get_contents();
