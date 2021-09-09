@@ -11,6 +11,7 @@ include_once 'lib/config.php';
 
 // define("APP_URL", "https://seedsjobfairapp.com/cf/app");
 // define("ASSET_URL", "https://seedsjobfairapp.com/public/asset");
+define("SUPPORT_USER_ID", 681);
 
 function createKeyId($id, $in_query = false)
 {
@@ -40,7 +41,21 @@ $q = "
         and e.status IS NULL
 ";
 $data = $DB->query_array($q);
-//X($data);
+// X($data);
+
+function getCompanyEmails($DB, $company_id){
+    $q = "
+        SELECT email FROM company_emails WHERE company_id = $company_id
+    ";
+    $data = $DB->query_array($q);
+
+    $ret = array();
+
+    foreach($data as $d){
+        array_push($ret, $d["email"]);
+    }
+    return $ret;
+}
 
 foreach ($data as $d) {
     $isSenderSupportOrCompany = $d["support_id"] == $d["from_user_id"];
@@ -64,45 +79,58 @@ foreach ($data as $d) {
     $toId = str_replace($toEntity,"",$toKey);
     $toQuery = getQueryEntity($toEntity, $toId, "to");
 
-    // akan skip sume message yang dihantar ke company or support
+    // akan skip sume message yang dihantar ke support
+    $isSendToCompany = false;
     if($support_id == $toId){
-        SendEmail::insert($keyId, "new_message", json_encode($d), "SKIP", $DB);
-        continue;
+        $isSendToCompany = true;
+        if($toId == SUPPORT_USER_ID){
+            SendEmail::insert($keyId, "new_message", json_encode($d), "SKIP", $DB);
+            continue;
+        }
     }
 
     $entityData = $DB->query_array($fromQuery." UNION ALL ".$toQuery);
-    X($d);
-    X($entityData);
+    // X($d);
+    // X($entityData);
 
     $fromData = $entityData[0];
     $toData = $entityData[1];
 
-    X($fromData);
-    X($toData);
+    // X($fromData);
+    // X($toData);
     // X("fromKey ".$fromKey." | "."fromEntity ".$fromEntity." | "."fromId ".$fromId);
     // X("toKey ".$toKey." | "."toEntity ".$toEntity." | "."toId ".$toId);
-    X("--------------------------------------------------------------");
+    // X("--------------------------------------------------------------");
 
-    $to = $toData["email"];
     $name = $toData["name"];
-
     $title = "{$fromData["name"]} sent you a new message";
-   
+    
     // debug
     //$to = "zulsarhan.shaari@gmail.com";
-
-    $body = createMessageNotificationEmail($fromData, $toData, $message);
-    $isHTML = true;
-    $isTestSender = false;
-    $from_name = "{$fromData["name"]} via SeedsJobFair";
-
-    // echo $from_name;
-    // echo "<hr>";
-    // echo $title;
-    // echo "<hr>";
-    // echo $body;
     
-    $res = sendMail($title, $body, $to, $name, $isHTML, $isTestSender, $from_name);
+    // get to emails
+    
+    if($isSendToCompany){
+        $toEmails = getCompanyEmails($DB, $toId);
+    } else{
+        $toEmails = [$toData["email"]];
+    }
+
+    $res = "";
+    foreach ($toEmails as $to) {
+        $body = createMessageNotificationEmail($fromData, $toData, $message);
+        $isHTML = true;
+        $isTestSender = false;
+        $from_name = "{$fromData["name"]} via SeedsJobFair";
+
+        // echo $from_name;
+        // echo "<hr>";
+        // echo $title;
+        // echo "<hr>";
+        // echo $body;
+    
+        $res = sendMail($title, $body, $to, $name, $isHTML, $isTestSender, $from_name);
+    }
     SendEmail::insert($keyId, "new_message", json_encode($d), $res, $DB);
 }
 
